@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/automuteus/utils/pkg/capture"
-	"github.com/automuteus/utils/pkg/game"
-	"github.com/automuteus/utils/pkg/settings"
 	"github.com/bwmarrin/discordgo"
+	"github.com/das08/utils/pkg/capture"
+	"github.com/das08/utils/pkg/game"
+	"github.com/das08/utils/pkg/settings"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
