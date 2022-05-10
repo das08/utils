@@ -93,3 +93,10 @@ type PostgresUserMostFrequentKilledByanking struct {
 	Encounter  int64   `db:"encounter"`
 	DeathRate  float64 `db:"death_rate"`
 }
+
+type PostgresWinRateRanking struct {
+	UserID      uint64  `db:"user_id"`
+	PlayedGames uint64  `db:"played_games"`
+	WonGames    uint64  `db:"won_games"`
+	WinRate     float64 `db:"win_rate"`
+}

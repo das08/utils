@@ -5,15 +5,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"strconv"
+	"time"
+
 	"github.com/automuteus/utils/pkg/capture"
 	"github.com/automuteus/utils/pkg/game"
 	"github.com/automuteus/utils/pkg/settings"
 	"github.com/bwmarrin/discordgo"
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"log"
-	"strconv"
-	"time"
 )
 
 var DiscussCode = fmt.Sprintf("%d", game.DISCUSS)
@@ -650,6 +651,24 @@ func (psqlInterface *PsqlInterface) UserMostFrequentKilledByServer(guildID strin
 		"WHERE users_games.guild_id = $3 AND users_games.player_role = $4 "+
 		"GROUP BY users_games.user_id, usG.user_id, users_games.user_id, total "+
 		"ORDER BY death_rate DESC, total_death DESC, encounter DESC;", strconv.Itoa(int(game.DIED)), strconv.Itoa(int(game.ImposterRole)), guildID, strconv.Itoa(int(game.CrewmateRole)))
+	if err != nil {
+		log.Println(err)
+	}
+	return r
+}
+
+func (psqlInterface *PsqlInterface) WinRateRanking(guildID string) []*PostgresWinRateRanking {
+	var r []*PostgresWinRateRanking
+	err := pgxscan.Select(context.Background(), psqlInterface.Pool, &r,
+		"SELECT t.user_id, t.played_games, t.won_games,"+
+			"(CASE WHEN played_games=0 THEN 0.0 ELSE (won_games::float)/played_games END) AS win_rate"+
+			"FROM ("+
+			"SELECT user_id,count(ug) AS played_games,"+
+			"SUM(CASE WHEN ug.player_won THEN 1 ELSE 0 END) AS won_games "+
+			"FROM users_games AS ug "+
+			"WHERE guild_id=$1 "+
+			"GROUP BY user_id) AS t "+
+			"ORDER BY win_rate DESC;", guildID)
 	if err != nil {
 		log.Println(err)
 	}
