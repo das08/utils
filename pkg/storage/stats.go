@@ -661,7 +661,7 @@ func (psqlInterface *PsqlInterface) WinRateRanking(guildID string) []*PostgresWi
 	var r []*PostgresWinRateRanking
 	err := pgxscan.Select(context.Background(), psqlInterface.Pool, &r,
 		"SELECT t.user_id, t.played_games, t.won_games,"+
-			"(CASE WHEN played_games=0 THEN 0.0 ELSE (won_games::float)/played_games END) AS win_rate"+
+			"(CASE WHEN played_games=0 THEN 0.0 ELSE (won_games::float)/played_games END) AS win_rate "+
 			"FROM ("+
 			"SELECT user_id,count(ug) AS played_games,"+
 			"SUM(CASE WHEN ug.player_won THEN 1 ELSE 0 END) AS won_games "+
