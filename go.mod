@@ -1,4 +1,4 @@
-module github.com/automuteus/utils
+module github.com/das08/utils
 
 go 1.18
 
