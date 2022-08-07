@@ -95,8 +95,14 @@ type PostgresUserMostFrequentKilledByanking struct {
 }
 
 type PostgresWinRateRanking struct {
-	UserID      uint64  `db:"user_id"`
-	PlayedGames uint64  `db:"played_games"`
-	WonGames    uint64  `db:"won_games"`
-	WinRate     float64 `db:"win_rate"`
+	UserID              uint64  `db:"user_id"`
+	PlayedGames         uint64  `db:"played_games"`
+	WonGames            uint64  `db:"won_games"`
+	WinRate             float64 `db:"win_rate"`
+	PlayedCrewGames     uint64  `db:"played_crew_games"`
+	CrewWonGames        uint64  `db:"won_crew_games"`
+	CrewWinRate         float64 `db:"crew_win_rate"`
+	PlayedImposterGames uint64  `db:"played_imposter_games"`
+	ImposterWonGames    uint64  `db:"won_imposter_games"`
+	ImposterWinRate     float64 `db:"imposter_win_rate"`
 }
