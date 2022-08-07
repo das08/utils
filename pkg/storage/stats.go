@@ -661,10 +661,18 @@ func (psqlInterface *PsqlInterface) WinRateRanking(guildID string) []*PostgresWi
 	var r []*PostgresWinRateRanking
 	err := pgxscan.Select(context.Background(), psqlInterface.Pool, &r,
 		"SELECT t.user_id, t.played_games, t.won_games,"+
-			"(CASE WHEN played_games=0 THEN 0.0 ELSE (won_games::float)/played_games END) AS win_rate "+
+			"(CASE WHEN played_games=0 THEN 0.0 ELSE (won_games::float)/played_games END) AS win_rate,"+
+			"t.played_crew_games, t.won_crew_games,"+
+			"(CASE WHEN played_crew_games=0 THEN 0.0 ELSE (won_crew_games::float)/played_crew_games END) AS crew_win_rate,"+
+			"t.played_imposter_games, t.won_imposter_games,"+
+			"(CASE WHEN played_imposter_games=0 THEN 0.0 ELSE (won_imposter_games::float)/played_imposter_games END) AS imposter_win_rate "+
 			"FROM ("+
 			"SELECT user_id,count(ug) AS played_games,"+
-			"SUM(CASE WHEN ug.player_won THEN 1 ELSE 0 END) AS won_games "+
+			"SUM(CASE WHEN ug.player_won THEN 1 ELSE 0 END) AS won_games,"+
+			"SUM(CASE WHEN ug.player_role=0 THEN 1 ELSE 0 END) AS played_crew_games,"+
+			"SUM(CASE WHEN ug.player_role=0 AND ug.player_won THEN 1 ELSE 0 END) AS won_crew_games,"+
+			"SUM(CASE WHEN ug.player_role=1 THEN 1 ELSE 0 END) AS played_imposter_games,"+
+			"SUM(CASE WHEN ug.player_role=1 AND ug.player_won THEN 1 ELSE 0 END) AS won_imposter_games "+
 			"FROM users_games AS ug "+
 			"WHERE guild_id=$1 "+
 			"GROUP BY user_id) AS t "+
