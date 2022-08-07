@@ -701,7 +701,7 @@ func (psqlInterface *PsqlInterface) SessionWinRateRanking(guildID string, connec
 			"SUM(CASE WHEN ug.player_role=1 AND ug.player_won THEN 1 ELSE 0 END) AS won_imposter_games "+
 			"FROM users_games AS ug "+
 			"INNER JOIN games ON games.game_id = ug.game_id "+
-			"WHERE guild_id=$1 "+
+			"WHERE ug.guild_id=$1 "+
 			"AND games.connect_code=$2 "+
 			"GROUP BY user_id) AS t "+
 			"ORDER BY win_rate DESC;", guildID, connectCode)
